@@ -7,22 +7,23 @@ export default function HomeScreen() {
         <View>
         <View>
                 <Text style={styles.header}>
-                    My Todo List
+                    MY TODO LIST
                 </Text>   
         </View>
         
-        <TodoList />
+        <TodoList taskDesc="Laundry"/>
+        <TodoList taskDesc="Exercise for 17 minutes"/>
+        <TodoList taskDesc="Finish assignment"/>
 
-        <TouchableOpacity
+        <View
             style={styles.addButton}
         >
             <Text style={{ 
-                color: "black", 
-                fontweight: "bold", 
+                color: "black",  
                 fontSize: 13,
                 }}> Add New Todo
             </Text>
-        </TouchableOpacity>
+        </View>
         </View>
     )
 };
@@ -30,17 +31,17 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
     header: {
         color: "black",
-        fontweight: "bold",
-        fontSize: 20,
-        alignSelf: "center"
+        fontSize: 25,
+        alignSelf: "center",
     },
     addButton: {
-        backgroundColor: "lavender",
+        backgroundColor: "#F2E3D5",
         borderRadius: 6,
         paddingVertical: 7,
         paddingHorizontal: 30,
         alignSelf: "center",
-        alignItems: "center"
+        alignItems: "center",
+        margin: 17,
     },
     todolist: {
         backgroundColor: "white",
