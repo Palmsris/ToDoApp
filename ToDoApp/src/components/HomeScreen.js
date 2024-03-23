@@ -21,6 +21,7 @@ export default function HomeScreen() {
             <Text style={{ 
                 color: "black",  
                 fontSize: 13,
+                
                 }}> Add New Todo
             </Text>
         </View>
