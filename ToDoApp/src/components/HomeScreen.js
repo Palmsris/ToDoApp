@@ -1,33 +1,38 @@
 import { Text, View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import React from "react";
 import TodoList from "./TodoList"
+import AddNewTodo from "./AddNewTodo";
+import { FontAwesome } from '@expo/vector-icons'; 
+import { useState } from 'react';
 
 export default function HomeScreen() {
+    const [showAddTodo, setShowAddTodo] = useState(false);
+
     return (
         <View>
-        <View>
-                <Text style={styles.header}>
-                    MY TODO LIST
-                </Text>   
-        </View>
-        
-        <TodoList taskDesc="Laundry"/>
-        <TodoList taskDesc="Exercise for 17 minutes"/>
-        <TodoList taskDesc="Finish assignment"/>
+            <View>
+                <Text style={styles.header}>MY TODO LIST</Text>
+            </View>
 
-        <View
-            style={styles.addButton}
-        >
-            <Text style={{ 
-                color: "black",  
-                fontSize: 13,
-                
-                }}> Add New Todo
-            </Text>
+            <TodoList taskDesc="Laundry"/>
+            <TodoList taskDesc="Exercise for 17 minutes"/>
+            <TodoList taskDesc="Finish assignment"/>
+
+            {showAddTodo ? (
+                <AddNewTodo /> // Render the AddNewTodo component
+            ) : (
+                <TouchableOpacity
+                    style={styles.addButton}
+                    onPress={() => setShowAddTodo(true)}
+                >
+                    <Text style={{ color: "black", fontSize: 13, marginRight: 5 }}>
+                        <FontAwesome name="plus" size={15} color="#593D25" /> Add New Todo
+                    </Text>
+                </TouchableOpacity>
+            )}
         </View>
-        </View>
-    )
-};
+    );
+}
 
 const styles = StyleSheet.create({
     header: {
