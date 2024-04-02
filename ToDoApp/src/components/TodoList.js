@@ -19,9 +19,10 @@ const styles = StyleSheet.create({
         borderRadius: 6,
     },
     text: {
-        fontSize: 15,
-        color: "black",
+        fontSize: 16,
+        color: "#593D25",
         padding: 5,
+        fontWeight: "bold",
     }
     });
     

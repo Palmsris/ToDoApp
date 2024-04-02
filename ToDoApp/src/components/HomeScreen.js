@@ -5,11 +5,12 @@ import AddNewTodo from "./AddNewTodo";
 import { FontAwesome } from '@expo/vector-icons'; 
 import { useState } from 'react';
 
-export default function HomeScreen() {
+
+export default function HomeScreen({ navigation }) {
     const [showAddTodo, setShowAddTodo] = useState(false);
 
     return (
-        <View>
+        <View style={styles.container}>
             <View>
                 <Text style={styles.header}>MY TODO LIST</Text>
             </View>
@@ -19,15 +20,14 @@ export default function HomeScreen() {
             <TodoList taskDesc="Finish assignment"/>
 
             {showAddTodo ? (
-                <AddNewTodo /> // Render the AddNewTodo component
+                <AddNewTodo /> 
             ) : (
                 <TouchableOpacity
                     style={styles.addButton}
-                    onPress={() => setShowAddTodo(true)}
+                    onPress ={()=>navigation.navigate('AddNewTodo')}
                 >
-                    <Text style={{ color: "black", fontSize: 13, marginRight: 5 }}>
-                        <FontAwesome name="plus" size={15} color="#593D25" /> Add New Todo
-                    </Text>
+                    <FontAwesome name="plus-circle" size={20} color="#593D25" style={styles.icon}/>
+                    <Text style={styles.todoButton}>Add New Todo</Text>
                 </TouchableOpacity>
             )}
         </View>
@@ -35,9 +35,17 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "#F2B3B3",
+        alignItems: "center",
+        justifyContent: "start",
+        padding: 60,
+    },
     header: {
-        color: "black",
+        color: "#593D25",
         fontSize: 25,
+        fontWeight: "bold",
         alignSelf: "center",
     },
     addButton: {
@@ -49,12 +57,21 @@ const styles = StyleSheet.create({
         alignItems: "center",
         margin: 17,
     },
-    todolist: {
-        backgroundColor: "white",
-        margin: 50,
-        fontSize: 15,
-        height: 30,
-        width: 300,
-    }
+    todoButton: {
+        color: "#593D25", 
+        fontSize: 16, 
+        fontWeight: "bold",
+        marginRight: 5,
+    },
+    icon: {
+        marginRight: 5,
+    },
+    // todolist: {
+    //     backgroundColor: "white",
+    //     margin: 50,
+    //     fontSize: 15,
+    //     height: 30,
+    //     width: 300,
+    // },
   });
 

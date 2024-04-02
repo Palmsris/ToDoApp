@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
-export default function AddNewTodo() {
+export default function AddNewTodo({ navigation }) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
 
     const handleSaveTodo = () => {
-        // Implement save todo functionality here
         console.log("Save todo pressed");
     };
 
@@ -29,15 +28,17 @@ export default function AddNewTodo() {
             />
             <View style={styles.buttonContainer}>
                 <TouchableOpacity
-                    style={[styles.button, { backgroundColor: 'red' }]}
-                    onPress={() => console.log("Cancel pressed")}
+                    onPress ={()=>navigation.navigate('HomeScreen')}
+                    style={[styles.button]}
                 >
+                    <FontAwesome name="close" size={20} color="#593D25" style={styles.icon}/>
                     <Text style={styles.buttonText}>Cancel</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={[styles.button, { backgroundColor: 'green' }]}
+                    style={[styles.button]}
                     onPress={handleSaveTodo}
                 >
+                     <FontAwesome name="save" size={20} color="#593D25" style={styles.icon}/>
                     <Text style={styles.buttonText}>Save</Text>
                 </TouchableOpacity>
             </View>
@@ -48,36 +49,40 @@ export default function AddNewTodo() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: "#F2B3B3",
         padding: 20,
     },
     title: {
         fontSize: 24,
-        fontWeight: 'bold',
         marginBottom: 20,
+        color: "#593D25",
+        fontWeight: "bold",
     },
     input: {
-        backgroundColor: '#F2F2F2',
+        backgroundColor: "#F2EFE9",
         padding: 10,
         marginBottom: 20,
         borderRadius: 6,
     },
     buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        flexDirection: "row",
+        justifyContent: "space-between",
     },
     button: {
-        backgroundColor: '#4CAF50',
+        backgroundColor: "#F2E3D5",
         paddingVertical: 12,
         paddingHorizontal: 30,
         borderRadius: 6,
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '45%',
+        alignItems: "center",
+        justifyContent: "center",
+        width: "45%",
     },
     buttonText: {
-        color: 'white',
+        color: "#593D25",
         fontSize: 16,
-        fontWeight: 'bold',
+        fontWeight: "bold",
+    },
+    icon: {
+        marginRight: 5,
     },
 });
