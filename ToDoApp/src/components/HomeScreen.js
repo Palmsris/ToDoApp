@@ -6,7 +6,6 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useState, useEffect } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
 export default function HomeScreen({ navigation }) {
     const [showAddTodo, setShowAddTodo] = useState(false);
     const [todos, setTodos] = useState([
@@ -42,25 +41,25 @@ export default function HomeScreen({ navigation }) {
         }
     };
 
- 
-    // const addNewTodo = (title, description) => {
-    //     const id = todos.length + 1;
-
-    //     setTodos([...todos, { id: `${id}`, title: `${title}`, description: `${description}` }]);
-    // };
-
-    const addNewTodo = (title, description) => {
+    const addNewTodo = async (title, description) => {
         const id = todos.length + 1;
         const newTodo = { id: `${id}`, title: `${title}`, description: `${description}`, finished: false };
         setTodos([...todos, newTodo]);
-      };
-
-    const toggleAddTodo = () => {
-        setShowAddTodo(!showAddTodo);
+        try {
+          await AsyncStorage.setItem('todos', JSON.stringify([...todos, newTodo]));
+        } catch (error) {
+          console.error('Error saving todos to AsyncStorage:', error);
+        }
     };
 
-    const handleDeleteTodo = (id) => {
-        setTodos(todos.filter(todo => todo.id !== id));
+    const handleDeleteTodo = async (id) => {
+        try {
+          const updatedTodos = todos.filter(todo => todo.id !== id);
+          setTodos(updatedTodos);
+          await AsyncStorage.setItem('todos', JSON.stringify(updatedTodos));
+        } catch (error) {
+          console.error('Error deleting todo:', error);
+        }
     };
 
     const renderItem = ({ item }) => (
@@ -89,7 +88,7 @@ export default function HomeScreen({ navigation }) {
             <View style={{flex: 1, justifyContent: 'flex-end'}}>
                     <TouchableOpacity
                         style={styles.addButton}
-                        onPress ={()=>navigation.navigate('AddNewTodo', {todoSubmit: addNewTodo})}
+                        onPress ={()=>navigation.navigate('AddNewTodo', { todoSubmit: addNewTodo })}
 
                     >
                         <FontAwesome name="plus-circle" size={20} color="#593D25" style={styles.icon}/>
@@ -106,7 +105,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#F2B3B3",
         alignItems: "center",
         justifyContent: "start",
-        padding: 60,
+        padding: 30,
     },
     header: {
         color: "#593D25",

@@ -2,6 +2,7 @@ import { Text, View, StyleSheet, TextInput, TouchableOpacity } from "react-nativ
 import React from "react";
 import { useState } from 'react';
 import { FontAwesome } from '@expo/vector-icons'; 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function TodoList({ id, title, description, onDelete }) {
   const [expanded, setExpanded] = useState(false);
@@ -11,12 +12,25 @@ export default function TodoList({ id, title, description, onDelete }) {
       setExpanded(!expanded);
   };
 
-  const handleFinishTodo = () => {
+  const handleFinishTodo = async () => {
+    try {
+      await AsyncStorage.setItem(id, JSON.stringify({ title, description, finished: !finished }));
       setFinished(!finished);
+            console.log("Finish successful");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleDeleteTodo = () => {
+  const handleDeleteTodo = async () => {
+    try {
+      await AsyncStorage.removeItem(id);
       onDelete(id);
+            console.log("Delete successful");
+    } catch (error) {
+      console.log(error);
+
+    }
   };
 
   return (
@@ -83,11 +97,10 @@ const styles = StyleSheet.create({
         marginLeft: 5,
     },
     descriptionContainer: {
-        // marginTop: 1,
         backgroundColor: "#F2E3D5",
         padding: 10,
         borderRadius: 6,
-        marginBottom: 10,
+        marginBottom: 15,
     },
     description: {
         fontSize: 16,
@@ -100,4 +113,3 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
     },
     });
-    
