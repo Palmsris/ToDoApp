@@ -1,13 +1,76 @@
-import { Text, View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, TextInput, TouchableOpacity, FlatList } from "react-native";
 import React from "react";
 import TodoList from "./TodoList"
 import AddNewTodo from "./AddNewTodo";
 import { FontAwesome } from '@expo/vector-icons'; 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export default function HomeScreen({ navigation }) {
     const [showAddTodo, setShowAddTodo] = useState(false);
+    const [todos, setTodos] = useState([
+            { id: 1, title: "Laundry", description: "Wash clothes and hang them to dry" },
+            { id: 2, title: "Exercise", description: "Do 17 minutes of exercise" },
+            { id: 3, title: "Assignment", description: "Finish assignment before 11:59 PM" },
+    ]);
+
+    useEffect(() => {
+        loadTodos();
+    }, []);
+
+    useEffect(() => {
+        saveTodos();
+    }, [todos]);
+
+    const loadTodos = async () => {
+        try {
+          const savedTodos = await AsyncStorage.getItem('todos');
+          if (savedTodos) {
+            setTodos(JSON.parse(savedTodos));
+          }
+        } catch (error) {
+          console.error('Error loading todos from AsyncStorage:', error);
+        }
+    };
+    
+    const saveTodos = async () => {
+        try {
+          await AsyncStorage.setItem('todos', JSON.stringify(todos));
+        } catch (error) {
+          console.error('Error saving todos to AsyncStorage:', error);
+        }
+    };
+
+ 
+    // const addNewTodo = (title, description) => {
+    //     const id = todos.length + 1;
+
+    //     setTodos([...todos, { id: `${id}`, title: `${title}`, description: `${description}` }]);
+    // };
+
+    const addNewTodo = (title, description) => {
+        const id = todos.length + 1;
+        const newTodo = { id: `${id}`, title: `${title}`, description: `${description}`, finished: false };
+        setTodos([...todos, newTodo]);
+      };
+
+    const toggleAddTodo = () => {
+        setShowAddTodo(!showAddTodo);
+    };
+
+    const handleDeleteTodo = (id) => {
+        setTodos(todos.filter(todo => todo.id !== id));
+    };
+
+    const renderItem = ({ item }) => (
+        <TodoList
+            id={item.id}
+            title={item.title}
+            description={item.description}
+            onDelete={handleDeleteTodo}
+        />
+    );
 
     return (
         <View style={styles.container}>
@@ -15,21 +78,24 @@ export default function HomeScreen({ navigation }) {
                 <Text style={styles.header}>MY TODO LIST</Text>
             </View>
 
-            <TodoList taskDesc="Laundry"/>
-            <TodoList taskDesc="Exercise for 17 minutes"/>
-            <TodoList taskDesc="Finish assignment"/>
 
-            {showAddTodo ? (
-                <AddNewTodo /> 
-            ) : (
-                <TouchableOpacity
-                    style={styles.addButton}
-                    onPress ={()=>navigation.navigate('AddNewTodo')}
-                >
-                    <FontAwesome name="plus-circle" size={20} color="#593D25" style={styles.icon}/>
-                    <Text style={styles.todoButton}>Add New Todo</Text>
-                </TouchableOpacity>
-            )}
+            <FlatList
+                data={todos}
+                renderItem={renderItem}
+                keyExtractor={item => item.id.toString()}
+            />
+
+
+            <View style={{flex: 1, justifyContent: 'flex-end'}}>
+                    <TouchableOpacity
+                        style={styles.addButton}
+                        onPress ={()=>navigation.navigate('AddNewTodo', {todoSubmit: addNewTodo})}
+
+                    >
+                        <FontAwesome name="plus-circle" size={20} color="#593D25" style={styles.icon}/>
+                        <Text style={styles.todoButton}>Add New Todo</Text>
+                    </TouchableOpacity>
+            </View>
         </View>
     );
 }
@@ -65,6 +131,7 @@ const styles = StyleSheet.create({
     },
     icon: {
         marginRight: 5,
+        flexDirection: "row",
     },
     // todolist: {
     //     backgroundColor: "white",
@@ -74,4 +141,3 @@ const styles = StyleSheet.create({
     //     width: 300,
     // },
   });
-

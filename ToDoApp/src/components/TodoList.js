@@ -1,28 +1,103 @@
 import { Text, View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import React from "react";
+import { useState } from 'react';
+import { FontAwesome } from '@expo/vector-icons'; 
 
-export default function TodoList({ taskDesc }) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.text}>{taskDesc}</Text>
-      </View>
-    );
-  }
+export default function TodoList({ id, title, description, onDelete }) {
+  const [expanded, setExpanded] = useState(false);
+  const [finished, setFinished] = useState(false);
+
+  const toggleExpanded = () => {
+      setExpanded(!expanded);
+  };
+
+  const handleFinishTodo = () => {
+      setFinished(!finished);
+  };
+
+  const handleDeleteTodo = () => {
+      onDelete(id);
+  };
+
+  return (
+    <>
+      <TouchableOpacity style={styles.todoBox} onPress={toggleExpanded}>
+              <Text style={styles.title}>{title}</Text>
+              
+              <FontAwesome 
+              name={expanded ? 'caret-up' : 'caret-down'} 
+              size={20} color="#593D25" 
+              />
+      </TouchableOpacity>
+
+          {expanded && (
+            <>
+              <View style={styles.descriptionContainer}>
+                  <Text style={styles.description}>{description}</Text>
+
+                  <View style={styles.controlPanel}>
+                    { !finished && (
+                      <TouchableOpacity onPress={handleFinishTodo}>
+                          <FontAwesome name="check-circle" size={20} color="green"/>
+                      </TouchableOpacity>
+                    )}
+
+                      <TouchableOpacity onPress={handleDeleteTodo}>
+                          <FontAwesome name="trash" size={20} color="red"/>
+                      </TouchableOpacity>
+                  </View>
+              </View>
+            </>
+          )}
+    </>   
+  );
+}
 
 
 const styles = StyleSheet.create({
-    container: {
+    todoBox: {
         backgroundColor: "#F2E3D5",
         margin: 7,
         height: 30,
         width: 300,
         borderRadius: 6,
+        flexDirection: "row",
     },
     text: {
         fontSize: 16,
         color: "#593D25",
         padding: 5,
         fontWeight: "bold",
-    }
+    },
+    titleContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: "#593D25",
+    },
+    icon: {
+        marginLeft: 5,
+    },
+    descriptionContainer: {
+        // marginTop: 1,
+        backgroundColor: "#F2E3D5",
+        padding: 10,
+        borderRadius: 6,
+        marginBottom: 10,
+    },
+    description: {
+        fontSize: 16,
+        color: "#593D25",
+    },
+    controlPanel: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "center",
+        paddingVertical: 10,
+    },
     });
     

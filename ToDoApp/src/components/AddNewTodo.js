@@ -1,16 +1,39 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
-export default function AddNewTodo({ navigation }) {
+export default function AddNewTodo({ navigation, route }) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
 
     const handleSaveTodo = () => {
+        if (!title.trim() || !description.trim()) {
+            // Alert.alert('Error', 'Title and Description cannot be empty');
+            if (!title.trim()) {
+                Alert.alert('Error', 'Title cannot be empty');
+            }
+            if (!description.trim()) {
+                Alert.alert('Error', 'Description cannot be empty');
+            }
+            
+            return;
+        }
         console.log("Save todo pressed");
+        console.log("Title: ", title);
+        console.log("Description: ", description);
+        route.params.todoSubmit(
+            title,
+            description,
+        );
+        //navigation.navigate('HomeScreen');
+
+        setTitle('');
+        setDescription('');
+
+        Alert.alert('Success', 'Todo Added Successfully.');
     };
 
-    return (
+    return (        
         <View style={styles.container}>
             <Text style={styles.title}>Add New Todo</Text>
             <TextInput
@@ -31,8 +54,8 @@ export default function AddNewTodo({ navigation }) {
                     onPress ={()=>navigation.navigate('HomeScreen')}
                     style={[styles.button]}
                 >
-                    <FontAwesome name="close" size={20} color="#593D25" style={styles.icon}/>
-                    <Text style={styles.buttonText}>Cancel</Text>
+                    <FontAwesome name="arrow-left" size={20} color="#593D25" style={styles.icon}/>
+                    <Text style={styles.buttonText}>Back</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={[styles.button]}
