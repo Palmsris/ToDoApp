@@ -7,40 +7,30 @@ export default function AddNewTodo({ navigation, route }) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
 
-    const handleSaveTodo = async () => {
+    const handleSaveTodo = () => {
         if (!title.trim() || !description.trim()) {
+            // Alert.alert('Error', 'Title and Description cannot be empty');
             if (!title.trim()) {
                 Alert.alert('Error', 'Title cannot be empty');
             }
             if (!description.trim()) {
                 Alert.alert('Error', 'Description cannot be empty');
             }
+            
             return;
         }
+        console.log("Save todo pressed");
+        console.log("Title: ", title);
+        console.log("Description: ", description);
+        route.params.todoSubmit(
+            title,
+            description,
+        );
 
-        try {
-            const todo = {
-                title,
-                description,
-            };
-            await AsyncStorage.setItem('todo', JSON.stringify(todo));
+        setTitle('');
+        setDescription('');
 
-            console.log("Save todo pressed");
-            console.log("Title: ", title);
-            console.log("Description: ", description);
-            route.params.todoSubmit(
-                title,
-                description,
-            );
-
-            setTitle('');
-            setDescription('');
-
-            Alert.alert('Success', 'Todo Added Successfully.');
-        } catch (error) {
-            console.log(error);
-            Alert.alert('Error', 'Failed to save todo.');
-        }
+        Alert.alert('Success', 'Todo Added Successfully.');
     };
 
     return (        
